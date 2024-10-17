@@ -16,13 +16,60 @@ const loadQuotes = () => {
 // Load quotes from local storage
 let quotes = loadQuotes();
 
+// Function to populate category dropdown
+const populateCategories = () => {
+    const categorySelect = document.getElementById('categorySelect');
+    const categories = [...new Set(quotes.map(quote => quote.category))]; // Get unique categories
+
+    // Clear existing options
+    categorySelect.innerHTML = '';
+
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+    });
+
+    // Restore the last selected category from local storage
+    const lastSelectedCategory = localStorage.getItem('lastSelectedCategory');
+    if (lastSelectedCategory) {
+        categorySelect.value = lastSelectedCategory; // Set dropdown to last selected category
+        filterQuotes(); // Display quotes for the last selected category
+    }
+};
+
+// Function to display quotes based on the selected category
+const filterQuotes = () => {
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    const selectedCategory = document.getElementById('categorySelect').value;
+
+    // Save the last selected category to local storage
+    localStorage.setItem('lastSelectedCategory', selectedCategory);
+
+    // Filter quotes based on selected category
+    const filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
+    quoteDisplay.innerHTML = ''; // Clear previous quotes
+
+    if (filteredQuotes.length > 0) {
+        filteredQuotes.forEach(quote => {
+            quoteDisplay.innerHTML += `"${quote.text}" <br><strong>Category:</strong> ${quote.category}<br><br>`;
+        });
+    } else {
+        quoteDisplay.innerHTML = "No quotes available in this category.";
+    }
+};
+
 // Function to display a random quote
 const showRandomQuote = () => {
     const quoteDisplay = document.getElementById('quoteDisplay');
+    const selectedCategory = document.getElementById('categorySelect').value;
 
-    // Select a random quote
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    const randomQuote = quotes[randomIndex];
+    // Filter quotes based on selected category
+    const filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
+    const randomQuote = filteredQuotes.length > 0 
+        ? filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)] 
+        : { text: "No quotes available in this category.", category: "" };
 
     // Clear existing content and display the new quote
     quoteDisplay.innerHTML = `"${randomQuote.text}" <br><strong>Category:</strong> ${randomQuote.category}`;
@@ -60,6 +107,12 @@ const createAddQuoteForm = () => {
             // Clear the input fields
             document.getElementById('newQuoteText').value = '';
             document.getElementById('newQuoteCategory').value = '';
+
+            // Populate categories to include the new category
+            populateCategories();
+
+            // Refresh the displayed quotes
+            filterQuotes();
         } else {
             alert('Please fill in both fields.');
         }
@@ -70,6 +123,9 @@ const createAddQuoteForm = () => {
 
     // Event listener for the import quotes file input
     document.getElementById('importQuotesInput').addEventListener('change', handleFileUpload);
+    
+    // Event listener for category selection change
+    document.getElementById('categorySelect').addEventListener('change', filterQuotes);
 };
 
 // Function to handle file input for importing quotes
@@ -84,6 +140,8 @@ const handleFileUpload = (event) => {
                 quotes = [...quotes, ...importedQuotes]; // Merge imported quotes with existing
                 localStorage.setItem('quotes', JSON.stringify(quotes)); // Update local storage
                 alert('Quotes imported successfully!');
+                populateCategories(); // Update categories after import
+                filterQuotes(); // Refresh the displayed quotes
             } catch (error) {
                 alert('Failed to import quotes. Please check the file format.');
             }
@@ -111,3 +169,6 @@ document.getElementById('generateQuoteBtn').addEventListener('click', showRandom
 
 // Call createAddQuoteForm to display the form for adding new quotes
 createAddQuoteForm();
+
+// Call populateCategories to populate the category dropdown on page load
+populateCategories();
