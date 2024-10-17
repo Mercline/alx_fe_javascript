@@ -33,12 +33,15 @@ const addQuote = () => {
         document.getElementById('newQuoteText').value = '';
         document.getElementById('newQuoteCategory').value = '';
 
-        // Optionally show the new quote immediately
+        // Show the new quote immediately
         showRandomQuote();
     } else {
         alert('Please fill in both fields.');
     }
 };
 
-// Event listener for the button click
+// Event listener for the button click to show a random quote
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+
+// Event listener for the button click to add a new quote
+document.getElementById('addQuoteBtn').addEventListener('click', addQuote);
