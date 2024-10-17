@@ -19,7 +19,7 @@ let quotes = loadQuotes();
 // Function to populate category dropdown
 const populateCategories = () => {
     const categorySelect = document.getElementById('categorySelect');
-    const categories = [...new Set(quotes.map(quote => quote.category))]; // Get unique categories
+    const categories = [...new Set(quotes.map(quote => quote.category))]; // Get unique categories using map and Set
 
     // Clear existing options
     categorySelect.innerHTML = '';
