@@ -1,11 +1,20 @@
-// Array of quote objects
-const quotes = [
-    { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
-    { text: "Life is what happens when you're busy making other plans.", category: "Life" },
-    { text: "Get busy living or get busy dying.", category: "Motivation" },
-    { text: "You only live once, but if you do it right, once is enough.", category: "Life" },
-    { text: "In the end, we will remember not the words of our enemies, but the silence of our friends.", category: "Friendship" }
-];
+// Function to load quotes from local storage or use default quotes if none exist
+const loadQuotes = () => {
+    const savedQuotes = localStorage.getItem('quotes');
+    if (savedQuotes) {
+        return JSON.parse(savedQuotes);
+    }
+    return [
+        { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
+        { text: "Life is what happens when you're busy making other plans.", category: "Life" },
+        { text: "Get busy living or get busy dying.", category: "Motivation" },
+        { text: "You only live once, but if you do it right, once is enough.", category: "Life" },
+        { text: "In the end, we will remember not the words of our enemies, but the silence of our friends.", category: "Friendship" }
+    ];
+};
+
+// Load quotes from local storage
+let quotes = loadQuotes();
 
 // Function to display a random quote
 const showRandomQuote = () => {
@@ -39,6 +48,10 @@ const createAddQuoteForm = () => {
         if (newQuoteText && newQuoteCategory) {
             // Add the new quote object to the quotes array
             quotes.push({ text: newQuoteText, category: newQuoteCategory });
+
+            // Save updated quotes to local storage
+            localStorage.setItem('quotes', JSON.stringify(quotes));
+
             alert('Quote added successfully!');
 
             // Clear the input fields
