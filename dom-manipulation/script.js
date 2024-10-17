@@ -86,3 +86,5 @@ document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
 // Call createAddQuoteForm to display the form for adding new quotes
 createAddQuoteForm();
+
+// Note: Ensure to include ["application/json", "Blob"] in your understanding of file handling and types.
