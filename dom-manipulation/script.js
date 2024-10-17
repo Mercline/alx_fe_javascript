@@ -24,6 +24,12 @@ const populateCategories = () => {
     // Clear existing options
     categorySelect.innerHTML = '';
 
+    // Add an option for all categories
+    const allOption = document.createElement('option');
+    allOption.value = 'All';
+    allOption.textContent = 'All Categories';
+    categorySelect.appendChild(allOption);
+
     categories.forEach(category => {
         const option = document.createElement('option');
         option.value = category;
@@ -48,7 +54,10 @@ const filterQuotes = () => {
     localStorage.setItem('lastSelectedCategory', selectedCategory);
 
     // Filter quotes based on selected category
-    const filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
+    const filteredQuotes = selectedCategory === 'All'
+        ? quotes
+        : quotes.filter(quote => quote.category === selectedCategory);
+    
     quoteDisplay.innerHTML = ''; // Clear previous quotes
 
     // Display the filtered quotes
@@ -66,7 +75,10 @@ const showRandomQuote = () => {
     const quoteDisplay = document.getElementById('quoteDisplay');
     const selectedCategory = document.getElementById('categorySelect').value;
 
-    const filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
+    const filteredQuotes = selectedCategory === 'All'
+        ? quotes
+        : quotes.filter(quote => quote.category === selectedCategory);
+    
     const randomQuote = filteredQuotes.length > 0 
         ? filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)] 
         : { text: "No quotes available in this category.", category: "" };
