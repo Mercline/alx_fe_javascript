@@ -50,7 +50,7 @@ const createAddQuoteForm = () => {
             quotes.push({ text: newQuoteText, category: newQuoteCategory });
 
             // Save updated quotes to local storage
-            localStorage.setItem('quotes', JSON.stringify(quotes));
+            localStorage.setItem('quotes', JSON.stringify(quotes)); // <-- Saving to localStorage
 
             alert('Quote added successfully!');
 
