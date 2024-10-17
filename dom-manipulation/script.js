@@ -113,7 +113,7 @@ const createAddQuoteForm = () => {
             document.getElementById('newQuoteText').value = '';
             document.getElementById('newQuoteCategory').value = '';
 
-            // Update categories and show the new quote immediately
+            // Update categories and show a random quote immediately
             updateCategories(newQuoteCategory);
             filterQuotes();
         } else {
