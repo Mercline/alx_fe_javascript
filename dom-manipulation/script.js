@@ -1,4 +1,4 @@
-// Function to load quotes from local storage or use default quotes if none exist
+// Function to load quotes from local storage or use default quotes if none exist 
 const loadQuotes = () => {
     const savedQuotes = localStorage.getItem('quotes');
     if (savedQuotes) {
@@ -36,6 +36,7 @@ const createAddQuoteForm = () => {
         <input type="text" id="newQuoteText" placeholder="Enter quote text" required>
         <input type="text" id="newQuoteCategory" placeholder="Enter category" required>
         <button id="addQuoteBtn">Add Quote</button>
+        <button id="exportQuotesBtn">Export Quotes</button> <!-- Export Quotes button -->
     `;
     
     document.body.appendChild(formContainer);
@@ -50,7 +51,7 @@ const createAddQuoteForm = () => {
             quotes.push({ text: newQuoteText, category: newQuoteCategory });
 
             // Save updated quotes to local storage
-            localStorage.setItem('quotes', JSON.stringify(quotes)); // <-- Saving to localStorage
+            localStorage.setItem('quotes', JSON.stringify(quotes)); // Saving to localStorage
 
             alert('Quote added successfully!');
 
@@ -61,6 +62,23 @@ const createAddQuoteForm = () => {
             alert('Please fill in both fields.');
         }
     });
+
+    // Event listener for the export quotes button
+    document.getElementById('exportQuotesBtn').addEventListener('click', exportQuotes);
+};
+
+// Function to export quotes as a JSON file
+const exportQuotes = () => {
+    const jsonString = JSON.stringify(quotes, null, 2); // Convert quotes array to JSON
+    const blob = new Blob([jsonString], { type: 'application/json' }); // Create a Blob with application/json type
+    const url = URL.createObjectURL(blob); // Create a URL for the Blob
+
+    const a = document.createElement('a'); // Create an anchor element
+    a.href = url; // Set the href to the Blob URL
+    a.download = 'quotes.json'; // Set the filename for download
+    document.body.appendChild(a); // Append the anchor to the document
+    a.click(); // Trigger the download
+    document.body.removeChild(a); // Remove the anchor from the document
 };
 
 // Event listener for the button click
