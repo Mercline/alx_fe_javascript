@@ -57,4 +57,4 @@ const createAddQuoteForm = () => {
 document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
 // Call the function to create the form for adding new quotes
-createAddQuoteForm();
+createAddQuoteForm();  // Ensure this line is present
