@@ -48,9 +48,14 @@ const displayQuotes = (quotesToDisplay) => {
 };
 
 // Function to filter quotes by selected category
+const categoryFilter = (selectedCategory) => {
+    return quotes.filter(quote => quote.category === selectedCategory);
+};
+
+// Function to handle filtering quotes
 const filterQuotes = () => {
     const selectedCategory = document.getElementById('filterSelect').value;
-    const filteredQuotes = quotes.filter(quote => quote.category === selectedCategory);
+    const filteredQuotes = categoryFilter(selectedCategory);
 
     // Save the selected category to local storage
     localStorage.setItem('lastSelectedCategory', selectedCategory);
