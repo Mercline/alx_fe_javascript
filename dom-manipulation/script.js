@@ -8,6 +8,17 @@ const loadQuotes = async () => {
     return data.slice(0, 5).map(item => ({ text: item.title, category: 'General' })); // Simulating quotes structure
 };
 
+// Function to fetch quotes from server
+const fetchQuotesFromServer = async () => {
+    try {
+        const fetchedQuotes = await loadQuotes();
+        return fetchedQuotes;
+    } catch (error) {
+        console.error('Error fetching quotes from server:', error);
+        return [];
+    }
+};
+
 // Save quotes to the mock API
 const saveQuoteToAPI = async (quote) => {
     await fetch(API_URL, {
@@ -224,7 +235,7 @@ const resolveConflict = (existingQuote, newQuote) => {
 
 // Function to periodically fetch updates
 const fetchUpdates = async () => {
-    const newQuotes = await loadQuotes();
+    const newQuotes = await fetchQuotesFromServer();
 
     let updated = false;
     for (const newQuote of newQuotes) {
@@ -253,7 +264,7 @@ const fetchUpdates = async () => {
 
 // Initialize the app
 const init = async () => {
-    quotes = await loadQuotes();
+    quotes = await fetchQuotesFromServer();
     createAddQuoteForm();
     populateCategories();
 
