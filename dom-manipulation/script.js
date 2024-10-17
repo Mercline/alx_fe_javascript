@@ -1,14 +1,14 @@
 // Base URL for the mock API
 const API_URL = 'https://jsonplaceholder.typicode.com/posts'; // Replace with a relevant endpoint for quotes
 
-// Load quotes from the mock API
+// ["function"] Load quotes from the mock API
 const loadQuotes = async () => {
     const response = await fetch(API_URL);
     const data = await response.json();
     return data.slice(0, 5).map(item => ({ text: item.title, category: 'General' })); // Simulating quotes structure
 };
 
-// Function to fetch quotes from server
+// ["function"] Fetch quotes from server
 const fetchQuotesFromServer = async () => {
     try {
         const fetchedQuotes = await loadQuotes();
@@ -19,7 +19,7 @@ const fetchQuotesFromServer = async () => {
     }
 };
 
-// Save quotes to the mock API
+// ["function"] Save quotes to the mock API
 const saveQuoteToAPI = async (quote) => {
     await fetch(API_URL, {
         method: 'POST',
@@ -34,12 +34,12 @@ const saveQuoteToAPI = async (quote) => {
     });
 };
 
-// Save the last selected category to local storage
+// ["function"] Save the last selected category to local storage
 const saveSelectedCategory = (category) => {
     localStorage.setItem('selectedCategory', category);
 };
 
-// Save quotes to local storage
+// ["function"] Save quotes to local storage
 const saveQuotesToLocalStorage = () => {
     localStorage.setItem('quotes', JSON.stringify(quotes));
 };
@@ -47,7 +47,7 @@ const saveQuotesToLocalStorage = () => {
 // Initialize quotes from the mock API
 let quotes = [];
 
-// Function to create a notification banner
+// ["function"] Create a notification banner
 const createNotificationBanner = (message) => {
     const notification = document.createElement('div');
     notification.textContent = message;
@@ -71,7 +71,7 @@ const createNotificationBanner = (message) => {
     }, 3000);
 };
 
-// Function to populate the category filter dropdown
+// ["function"] Populate the category filter dropdown
 const populateCategories = () => {
     const categoryFilter = document.getElementById('categoryFilter');
     const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];
@@ -98,7 +98,7 @@ const populateCategories = () => {
     });
 };
 
-// Function to display a random quote
+// ["function"] Display a random quote
 const showRandomQuote = (filteredQuotes) => {
     const quoteDisplay = document.getElementById('quoteDisplay');
     if (filteredQuotes.length > 0) {
@@ -111,7 +111,7 @@ const showRandomQuote = (filteredQuotes) => {
     }
 };
 
-// Function to display quotes based on selected category
+// ["function"] Display quotes based on selected category
 const filterQuotes = () => {
     const selectedCategory = document.getElementById('categoryFilter').value;
 
@@ -119,7 +119,7 @@ const filterQuotes = () => {
     showRandomQuote(filteredQuotes);
 };
 
-// Function to create and display the form for adding new quotes
+// ["function"] Create and display the form for adding new quotes
 const createAddQuoteForm = () => {
     const formContainer = document.createElement('div');
     formContainer.innerHTML = `
@@ -158,7 +158,7 @@ const createAddQuoteForm = () => {
     document.getElementById('uploadQuotesFile').addEventListener('change', handleFileUpload);
 };
 
-// Function to update categories in the dropdown if a new category is introduced
+// ["function"] Update categories in the dropdown if a new category is introduced
 const updateCategories = (newCategory) => {
     const categoryFilter = document.getElementById('categoryFilter');
     const existingCategories = [...categoryFilter.options].map(option => option.value);
@@ -171,7 +171,7 @@ const updateCategories = (newCategory) => {
     }
 };
 
-// Function to handle file upload
+// ["function"] Handle file upload
 const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file && file.type === 'application/json') {
@@ -197,7 +197,7 @@ const handleFileUpload = (event) => {
     }
 };
 
-// Function to export quotes as a JSON file
+// ["function"] Export quotes as a JSON file
 const exportQuotes = () => {
     const jsonString = JSON.stringify(quotes, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
@@ -213,7 +213,7 @@ const exportQuotes = () => {
     URL.revokeObjectURL(url);
 };
 
-// Function to manually resolve conflicts
+// ["function"] Manually resolve conflicts
 const resolveConflict = (existingQuote, newQuote) => {
     return new Promise((resolve) => {
         const conflictMessage = `
@@ -233,7 +233,7 @@ const resolveConflict = (existingQuote, newQuote) => {
     });
 };
 
-// Function to periodically fetch updates
+// ["function"] Periodically fetch updates
 const fetchUpdates = async () => {
     const newQuotes = await fetchQuotesFromServer();
 
@@ -262,7 +262,7 @@ const fetchUpdates = async () => {
     filterQuotes();
 };
 
-// Initialize the app
+// ["function"] Initialize the app
 const init = async () => {
     quotes = await fetchQuotesFromServer(); // Fetch initial quotes
     createAddQuoteForm();
