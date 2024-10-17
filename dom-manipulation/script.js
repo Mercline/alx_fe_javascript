@@ -76,11 +76,11 @@ const createAddQuoteForm = () => {
 const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-        const reader = new FileReader();
+        const reader = new FileReader(); // Create a FileReader object
         reader.onload = (e) => {
-            const content = e.target.result;
+            const content = e.target.result; // Get the file content
             try {
-                const importedQuotes = JSON.parse(content);
+                const importedQuotes = JSON.parse(content); // Parse the JSON content
                 quotes = [...quotes, ...importedQuotes]; // Merge imported quotes with existing
                 localStorage.setItem('quotes', JSON.stringify(quotes)); // Update local storage
                 alert('Quotes imported successfully!');
