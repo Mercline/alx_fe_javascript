@@ -37,6 +37,8 @@ const createAddQuoteForm = () => {
         <input type="text" id="newQuoteCategory" placeholder="Enter category" required>
         <button id="addQuoteBtn">Add Quote</button>
         <button id="exportQuotesBtn">Export Quotes</button> <!-- Export Quotes button -->
+        <h2>Import Quotes</h2>
+        <input type="file" id="importQuotesInput" accept=".json"> <!-- File input for importing quotes -->
     `;
     
     document.body.appendChild(formContainer);
@@ -65,6 +67,29 @@ const createAddQuoteForm = () => {
 
     // Event listener for the export quotes button
     document.getElementById('exportQuotesBtn').addEventListener('click', exportQuotes);
+
+    // Event listener for the import quotes file input
+    document.getElementById('importQuotesInput').addEventListener('change', handleFileUpload);
+};
+
+// Function to handle file input for importing quotes
+const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            try {
+                const importedQuotes = JSON.parse(content);
+                quotes = [...quotes, ...importedQuotes]; // Merge imported quotes with existing
+                localStorage.setItem('quotes', JSON.stringify(quotes)); // Update local storage
+                alert('Quotes imported successfully!');
+            } catch (error) {
+                alert('Failed to import quotes. Please check the file format.');
+            }
+        };
+        reader.readAsText(file); // Read the file as text
+    }
 };
 
 // Function to export quotes as a JSON file
@@ -82,9 +107,7 @@ const exportQuotes = () => {
 };
 
 // Event listener for the button click
-document.getElementById('newQuote').addEventListener('click', showRandomQuote);
+document.getElementById('generateQuoteBtn').addEventListener('click', showRandomQuote);
 
 // Call createAddQuoteForm to display the form for adding new quotes
 createAddQuoteForm();
-
-// Note: Ensure to include ["application/json", "Blob"] in your understanding of file handling and types.
