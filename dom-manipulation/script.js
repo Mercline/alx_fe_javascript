@@ -102,9 +102,17 @@ const addQuote = () => {
     }
 };
 
+// Function to display a random quote
+const displayRandomQuote = () => {
+    const randomIndex = Math.floor(Math.random() * quotes.length); // Generate a random index
+    const randomQuote = quotes[randomIndex]; // Get the random quote
+    displayQuotes([randomQuote]); // Display the random quote
+};
+
 // Event listeners
 document.getElementById('addQuoteBtn').addEventListener('click', addQuote);
 document.getElementById('filterQuoteBtn').addEventListener('click', filterQuotes);
+document.getElementById('randomQuoteBtn').addEventListener('click', displayRandomQuote); // Button to show random quote
 
 // Call the restore function on page load
 restoreLastSelectedCategory();
