@@ -264,11 +264,11 @@ const fetchUpdates = async () => {
 
 // Initialize the app
 const init = async () => {
-    quotes = await fetchQuotesFromServer();
+    quotes = await fetchQuotesFromServer(); // Fetch initial quotes
     createAddQuoteForm();
     populateCategories();
 
-    setInterval(fetchUpdates, 30000);
+    setInterval(fetchUpdates, 30000); // Fetch updates every 30 seconds
 };
 
 init();
