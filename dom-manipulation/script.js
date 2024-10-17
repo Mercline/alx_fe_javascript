@@ -57,15 +57,9 @@ const populateCategories = () => {
     });
 };
 
-// Function to display quotes based on selected category
-const filterQuotes = () => {
-    const selectedCategory = document.getElementById('categoryFilter').value;
+// Function to display a random quote
+const showRandomQuote = (filteredQuotes) => {
     const quoteDisplay = document.getElementById('quoteDisplay');
-
-    // Filter quotes based on the selected category
-    const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
-
-    // Select a random quote from the filtered quotes
     if (filteredQuotes.length > 0) {
         const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
         const randomQuote = filteredQuotes[randomIndex];
@@ -75,6 +69,17 @@ const filterQuotes = () => {
     } else {
         quoteDisplay.innerHTML = "No quotes available for this category.";
     }
+};
+
+// Function to display quotes based on selected category
+const filterQuotes = () => {
+    const selectedCategory = document.getElementById('categoryFilter').value;
+
+    // Filter quotes based on the selected category
+    const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
+
+    // Show a random quote from the filtered quotes
+    showRandomQuote(filteredQuotes);
 };
 
 // Function to create and display the form for adding new quotes
