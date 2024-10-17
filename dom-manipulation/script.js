@@ -254,7 +254,7 @@ const syncQuotes = async () => {
     }
 
     if (updated) {
-        createNotificationBanner('Quotes synchronized successfully!');
+        createNotificationBanner('Quotes synced with server!'); // Updated notification message
     }
 
     saveQuotesToLocalStorage();
@@ -267,13 +267,4 @@ const fetchUpdates = async () => {
     await syncQuotes(); // Call the syncQuotes function to update quotes
 };
 
-// ["function"] Initialize the app
-const init = async () => {
-    quotes = await fetchQuotesFromServer(); // Fetch initial quotes
-    createAddQuoteForm();
-    populateCategories();
-
-    setInterval(fetchUpdates, 30000); // Fetch updates every 30 seconds
-};
-
-init();
+// ["function"] Initialize the
