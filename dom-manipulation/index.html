@@ -4,12 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dynamic Quote Generator</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Dynamic Quote Generator</h1>
-    <div id="quoteDisplay"></div>
-    <button id="newQuote">Show New Quote</button>
-    <button id="exportQuotesBtn">Export Quotes</button> <!-- Added Export Quotes button -->
+    <div class="container">
+        <h1>Dynamic Quote Generator</h1>
+        
+        <label for="categorySelect">Select Category:</label>
+        <select id="categorySelect"></select>
+        
+        <button id="generateQuoteBtn">Generate Quote</button>
+        
+        <div id="quoteDisplay"></div>
+        
+        <h2>Add New Quote</h2>
+        <input type="text" id="newQuoteInput" placeholder="Enter new quote">
+        
+        <label for="newCategoryInput">Category:</label>
+        <input type="text" id="newCategoryInput" placeholder="Enter category">
+        
+        <button id="addQuoteBtn">Add Quote</button>
+        
+        <h2>Export Quotes</h2>
+        <button id="exportQuotesBtn">Export Quotes</button> <!-- Added Export Quotes button -->
+        
+        <h2>Available Categories</h2>
+        <ul id="categoryList"></ul>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
