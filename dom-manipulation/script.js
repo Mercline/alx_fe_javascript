@@ -15,7 +15,7 @@ const loadQuotes = () => {
 
 // Save quotes to local storage
 const saveQuotes = () => {
-    localStorage.setItem('quotes', JSON.stringify(quotes));
+    localStorage.setItem('quotes', JSON.stringify(quotes)); // Save the quotes array to local storage as a JSON string
 };
 
 // Initialize quotes from local storage
@@ -58,7 +58,7 @@ const createAddQuoteForm = () => {
             alert('Quote added successfully!');
 
             // Save the updated quotes array to local storage
-            saveQuotes();
+            saveQuotes(); // Ensure quotes are saved after adding a new quote
 
             // Clear the input fields
             document.getElementById('newQuoteText').value = '';
