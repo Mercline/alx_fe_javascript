@@ -39,7 +39,7 @@ const populateCategories = () => {
     }
 };
 
-// Function to display quotes based on the selected category
+// Function to filter quotes based on the selected category
 const filterQuotes = () => {
     const quoteDisplay = document.getElementById('quoteDisplay');
     const selectedCategory = document.getElementById('categorySelect').value;
