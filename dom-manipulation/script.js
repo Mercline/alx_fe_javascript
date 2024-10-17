@@ -71,30 +71,6 @@ const createNotificationBanner = (message) => {
     }, 3000);
 };
 
-// ["function"] Create a conflict notification banner
-const createConflictBanner = (message) => {
-    const notification = document.createElement('div');
-    notification.textContent = message;
-    notification.style.position = 'fixed';
-    notification.style.top = '0';
-    notification.style.left = '50%';
-    notification.style.transform = 'translateX(-50%)';
-    notification.style.backgroundColor = '#FF9800'; // Orange for conflicts
-    notification.style.color = 'white';
-    notification.style.padding = '10px 20px';
-    notification.style.borderRadius = '5px';
-    notification.style.zIndex = '1000';
-    notification.style.opacity = '0.9';
-    notification.style.transition = 'opacity 0.5s';
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        setTimeout(() => document.body.removeChild(notification), 500);
-    }, 3000);
-};
-
 // ["function"] Populate the category filter dropdown
 const populateCategories = () => {
     const categoryFilter = document.getElementById('categoryFilter');
@@ -250,10 +226,8 @@ const resolveConflict = (existingQuote, newQuote) => {
         const userChoice = prompt(conflictMessage);
 
         if (userChoice === '2') {
-            createConflictBanner('Replaced existing quote with new quote.');
             resolve(newQuote); // Replace with new quote
         } else {
-            createConflictBanner('Kept existing quote.');
             resolve(existingQuote); // Keep existing quote
         }
     });
@@ -293,13 +267,4 @@ const fetchUpdates = async () => {
     await syncQuotes(); // Call the syncQuotes function to update quotes
 };
 
-// ["function"] Initialize the app
-const init = async () => {
-    quotes = await fetchQuotesFromServer(); // Fetch initial quotes
-    createAddQuoteForm();
-    populateCategories();
-
-    setInterval(fetchUpdates, 30000); // Fetch updates every 30 seconds
-};
-
-init();
+// ["function"] Initialize the
