@@ -37,6 +37,12 @@ const populateCategories = () => {
         option.textContent = category;
         filterSelect.appendChild(option);
     });
+
+    // Add an option for all categories in the filter
+    const allOption = document.createElement('option');
+    allOption.value = 'All';
+    allOption.textContent = 'All Categories';
+    filterSelect.appendChild(allOption);
 };
 
 // Call the function to populate categories on page load
