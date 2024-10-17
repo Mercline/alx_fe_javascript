@@ -28,8 +28,8 @@ let quotes = loadQuotes();
 
 // Function to populate the category filter dropdown
 const populateCategories = () => {
-    const categoryFilter = document.getElementById('categoryFilter');
-    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];
+    const categoryFilter = document.getElementById('categoryFilter'); // Getting the category filter element
+    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))]; // Using map to get unique categories
 
     // Clear existing options
     categoryFilter.innerHTML = '<option value="all">All Categories</option>';
@@ -126,7 +126,7 @@ const createAddQuoteForm = () => {
 // Function to update categories in the dropdown if a new category is introduced
 const updateCategories = (newCategory) => {
     const categoryFilter = document.getElementById('categoryFilter');
-    const existingCategories = [...categoryFilter.options].map(option => option.value);
+    const existingCategories = [...categoryFilter.options].map(option => option.value); // Getting existing categories with map
 
     // If the new category is not in the dropdown, add it
     if (!existingCategories.includes(newCategory)) {
