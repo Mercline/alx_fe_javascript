@@ -33,7 +33,7 @@ const addQuote = () => {
         document.getElementById('newQuoteText').value = '';
         document.getElementById('newQuoteCategory').value = '';
 
-        // Show the new quote immediately
+        // Optionally show the new quote immediately
         showRandomQuote();
     } else {
         alert('Please fill in both fields.');
