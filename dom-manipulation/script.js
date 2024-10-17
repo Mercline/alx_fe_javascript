@@ -1,21 +1,26 @@
-// Load quotes from local storage or use default quotes if none exist
-const loadQuotes = () => {
-    const savedQuotes = localStorage.getItem('quotes');
-    if (savedQuotes) {
-        return JSON.parse(savedQuotes);
-    }
-    return [
-        { text: "The only way to do great work is to love what you do.", category: "Inspiration" },
-        { text: "Life is what happens when you're busy making other plans.", category: "Life" },
-        { text: "Get busy living or get busy dying.", category: "Motivation" },
-        { text: "You only live once, but if you do it right, once is enough.", category: "Life" },
-        { text: "In the end, we will remember not the words of our enemies, but the silence of our friends.", category: "Friendship" }
-    ];
+// Base URL for the mock API
+const API_URL = 'https://jsonplaceholder.typicode.com/posts'; // Replace with a relevant endpoint for quotes
+
+// Load quotes from the mock API
+const loadQuotes = async () => {
+    const response = await fetch(API_URL);
+    const data = await response.json();
+    return data.slice(0, 5).map(item => ({ text: item.title, category: 'General' })); // Simulating quotes structure
 };
 
-// Save quotes to local storage
-const saveQuotes = () => {
-    localStorage.setItem('quotes', JSON.stringify(quotes));
+// Save quotes to the mock API
+const saveQuoteToAPI = async (quote) => {
+    await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title: quote.text,
+            body: quote.category,
+            userId: 1 // Simulated userId
+        })
+    });
 };
 
 // Save the last selected category to local storage
@@ -23,13 +28,42 @@ const saveSelectedCategory = (category) => {
     localStorage.setItem('selectedCategory', category);
 };
 
-// Initialize quotes from local storage
-let quotes = loadQuotes();
+// Save quotes to local storage
+const saveQuotesToLocalStorage = () => {
+    localStorage.setItem('quotes', JSON.stringify(quotes));
+};
+
+// Initialize quotes from the mock API
+let quotes = [];
+
+// Function to create a notification banner
+const createNotificationBanner = (message) => {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.top = '0';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.backgroundColor = '#4CAF50';
+    notification.style.color = 'white';
+    notification.style.padding = '10px 20px';
+    notification.style.borderRadius = '5px';
+    notification.style.zIndex = '1000';
+    notification.style.opacity = '0.9';
+    notification.style.transition = 'opacity 0.5s';
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => document.body.removeChild(notification), 500);
+    }, 3000);
+};
 
 // Function to populate the category filter dropdown
 const populateCategories = () => {
-    const categoryFilter = document.getElementById('categoryFilter'); // Getting the category filter element
-    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))]; // Using map to get unique categories
+    const categoryFilter = document.getElementById('categoryFilter');
+    const uniqueCategories = [...new Set(quotes.map(quote => quote.category))];
 
     // Clear existing options
     categoryFilter.innerHTML = '<option value="all">All Categories</option>';
@@ -42,17 +76,13 @@ const populateCategories = () => {
         categoryFilter.appendChild(option);
     });
 
-    // Restore the last selected category from local storage
     const savedCategory = localStorage.getItem('selectedCategory') || 'all';
     categoryFilter.value = savedCategory;
-
-    // Filter quotes based on the restored category
     filterQuotes();
 
-    // Add event listener for category change
     categoryFilter.addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
-        saveSelectedCategory(selectedCategory); // Save the selected category
+        saveSelectedCategory(selectedCategory);
         filterQuotes();
     });
 };
@@ -64,7 +94,6 @@ const showRandomQuote = (filteredQuotes) => {
         const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
         const randomQuote = filteredQuotes[randomIndex];
 
-        // Display the selected quote
         quoteDisplay.innerHTML = `"${randomQuote.text}" <br><strong>Category:</strong> ${randomQuote.category}`;
     } else {
         quoteDisplay.innerHTML = "No quotes available for this category.";
@@ -75,10 +104,7 @@ const showRandomQuote = (filteredQuotes) => {
 const filterQuotes = () => {
     const selectedCategory = document.getElementById('categoryFilter').value;
 
-    // Filter quotes based on the selected category
     const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(quote => quote.category === selectedCategory);
-
-    // Show a random quote from the filtered quotes
     showRandomQuote(filteredQuotes);
 };
 
@@ -96,24 +122,20 @@ const createAddQuoteForm = () => {
 
     document.body.appendChild(formContainer);
 
-    // Event listener for the add quote button
-    document.getElementById('addQuoteBtn').addEventListener('click', () => {
+    document.getElementById('addQuoteBtn').addEventListener('click', async () => {
         const newQuoteText = document.getElementById('newQuoteText').value.trim();
         const newQuoteCategory = document.getElementById('newQuoteCategory').value.trim();
 
         if (newQuoteText && newQuoteCategory) {
-            // Add the new quote object to the quotes array
-            quotes.push({ text: newQuoteText, category: newQuoteCategory });
-            alert('Quote added successfully!');
+            const newQuote = { text: newQuoteText, category: newQuoteCategory };
+            quotes.push(newQuote);
+            createNotificationBanner('Quote added successfully!');
 
-            // Save the updated quotes array to local storage
-            saveQuotes();
+            await saveQuoteToAPI(newQuote);
 
-            // Clear the input fields
             document.getElementById('newQuoteText').value = '';
             document.getElementById('newQuoteCategory').value = '';
 
-            // Update categories and show a random quote immediately
             updateCategories(newQuoteCategory);
             filterQuotes();
         } else {
@@ -121,19 +143,15 @@ const createAddQuoteForm = () => {
         }
     });
 
-    // Event listener for the export quotes button
     document.getElementById('exportQuotesBtn').addEventListener('click', exportQuotes);
-
-    // Event listener for file input
     document.getElementById('uploadQuotesFile').addEventListener('change', handleFileUpload);
 };
 
 // Function to update categories in the dropdown if a new category is introduced
 const updateCategories = (newCategory) => {
     const categoryFilter = document.getElementById('categoryFilter');
-    const existingCategories = [...categoryFilter.options].map(option => option.value); // Getting existing categories with map
+    const existingCategories = [...categoryFilter.options].map(option => option.value);
 
-    // If the new category is not in the dropdown, add it
     if (!existingCategories.includes(newCategory)) {
         const option = document.createElement('option');
         option.value = newCategory;
@@ -151,10 +169,10 @@ const handleFileUpload = (event) => {
             try {
                 const uploadedQuotes = JSON.parse(e.target.result);
                 if (Array.isArray(uploadedQuotes)) {
-                    quotes = uploadedQuotes; // Update quotes array
-                    saveQuotes(); // Save updated quotes to local storage
-                    populateCategories(); // Populate categories after upload
-                    alert('Quotes uploaded successfully!');
+                    quotes = uploadedQuotes;
+                    saveQuotesToLocalStorage();
+                    populateCategories();
+                    createNotificationBanner('Quotes uploaded successfully!');
                 } else {
                     alert('Invalid JSON format. Please upload a valid quotes file.');
                 }
@@ -170,26 +188,76 @@ const handleFileUpload = (event) => {
 
 // Function to export quotes as a JSON file
 const exportQuotes = () => {
-    const jsonString = JSON.stringify(quotes, null, 2); // Convert quotes to a JSON string
-    const blob = new Blob([jsonString], { type: 'application/json' }); // Create a Blob from the JSON string
-    const url = URL.createObjectURL(blob); // Create a URL for the Blob
+    const jsonString = JSON.stringify(quotes, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
 
-    // Create a link element
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'quotes.json'; // Set the default file name
+    a.download = 'quotes.json';
 
-    // Programmatically click the link to trigger the download
     document.body.appendChild(a);
     a.click();
-
-    // Clean up and remove the link
     document.body.removeChild(a);
-    URL.revokeObjectURL(url); // Free up memory
+    URL.revokeObjectURL(url);
 };
 
-// Call the function to create the form for adding new quotes
-createAddQuoteForm();
+// Function to manually resolve conflicts
+const resolveConflict = (existingQuote, newQuote) => {
+    return new Promise((resolve) => {
+        const conflictMessage = `
+            Conflict detected for quote: "${existingQuote.text}".
+            New quote from server: "${newQuote.text}".
+            Choose the option:
+            1. Keep existing quote
+            2. Replace with new quote
+        `;
+        const userChoice = prompt(conflictMessage);
 
-// Populate categories on page load
-populateCategories();
+        if (userChoice === '2') {
+            resolve(newQuote); // Replace with new quote
+        } else {
+            resolve(existingQuote); // Keep existing quote
+        }
+    });
+};
+
+// Function to periodically fetch updates
+const fetchUpdates = async () => {
+    const newQuotes = await loadQuotes();
+
+    let updated = false;
+    for (const newQuote of newQuotes) {
+        const existingQuoteIndex = quotes.findIndex(quote => quote.text === newQuote.title);
+
+        if (existingQuoteIndex !== -1) {
+            const existingQuote = quotes[existingQuoteIndex];
+            // If there's a conflict, ask the user how to resolve it
+            const resolvedQuote = await resolveConflict(existingQuote, { text: newQuote.title, category: 'General' });
+            quotes[existingQuoteIndex] = resolvedQuote; // Update with resolved quote
+            updated = true;
+        } else {
+            quotes.push({ text: newQuote.title, category: 'General' });
+            updated = true;
+        }
+    }
+
+    if (updated) {
+        createNotificationBanner('Quotes updated successfully!');
+    }
+
+    saveQuotesToLocalStorage();
+    populateCategories();
+    filterQuotes();
+};
+
+// Initialize the app
+const init = async () => {
+    quotes = await loadQuotes();
+    createAddQuoteForm();
+    populateCategories();
+
+    setInterval(fetchUpdates, 30000);
+};
+
+init();
