@@ -233,8 +233,8 @@ const resolveConflict = (existingQuote, newQuote) => {
     });
 };
 
-// ["function"] Periodically fetch updates
-const fetchUpdates = async () => {
+// ["function"] Synchronize quotes with server
+const syncQuotes = async () => {
     const newQuotes = await fetchQuotesFromServer();
 
     let updated = false;
@@ -254,12 +254,17 @@ const fetchUpdates = async () => {
     }
 
     if (updated) {
-        createNotificationBanner('Quotes updated successfully!');
+        createNotificationBanner('Quotes synchronized successfully!');
     }
 
     saveQuotesToLocalStorage();
     populateCategories();
     filterQuotes();
+};
+
+// ["function"] Periodically fetch updates
+const fetchUpdates = async () => {
+    await syncQuotes(); // Call the syncQuotes function to update quotes
 };
 
 // ["function"] Initialize the app
